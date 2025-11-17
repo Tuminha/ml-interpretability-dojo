@@ -76,13 +76,30 @@ Each notebook is designed as a learning journey: 70% explanation, 30% guided imp
 
 </div>
 
-### Notebook 01: Permutation Importance
+### Notebook 01: Permutation Importance ✅
 **Breaking the Connection** — What happens when we randomly shuffle a feature? If the model's performance barely changes, that feature carries little signal. Permutation importance quantifies this intuition, giving us a model-agnostic way to rank features by their predictive power.
 
 **Key Concepts:**
 - Feature-target association breaking
 - Metric drop as importance signal
 - Difference from label permutation tests
+
+**Results:**
+- Permutation importance computed on Ridge regression model (R² = 0.4528)
+- **Top 3 Most Important Features**:
+  1. `s1` (blood serum): 0.609 importance (R² drop when permuted)
+  2. `s5` (blood serum): 0.464 importance
+  3. `s2` (blood serum): 0.227 importance
+- Manual verification: Permuting `s1` caused R² to drop from 0.45 to -0.05 (model worse than baseline!)
+- Key insight: Blood serum measurements (`s1`, `s5`, `s2`) are critical biomarkers for diabetes progression
+
+<div align="center">
+
+<img src="images/01_permutation_importance.png" alt="Permutation Importance Results" width="680" />
+
+*Feature importance ranking with error bars showing stability across 10 repeats*
+
+</div>
 
 ### Notebook 02: Regularization (Ridge & Lasso)
 **The Art of Restraint** — Overfitting is the enemy of generalization. Regularization tames it by penalizing complexity. Ridge shrinks coefficients smoothly. Lasso can zero them out entirely, performing automatic feature selection. Understanding when to use each is a superpower.
@@ -213,7 +230,8 @@ ml-interpretability-dojo/
 ├── tests/
 │   └── smoke_test_plan.md   # Acceptance criteria
 ├── images/                  # Saved plots and visualizations
-│   └── 00_model_performance_context.png
+│   ├── 00_model_performance_context.png
+│   └── 01_permutation_importance.png
 └── data/
     └── results/             # Saved model scores and metrics
         └── Baseline_linear_regression_scores.json
@@ -256,16 +274,52 @@ The goal isn't to copy-paste code—it's to build **durable intuition** that you
 
 ---
 
+#### ✅ Notebook 01: Permutation Importance
+**Status**: Completed
+
+**Model**: Ridge Regression with StandardScaler (α = 0.1)
+- **Baseline Performance**: R² = 0.4528
+- **Permutation Importance Method**: scikit-learn's `permutation_importance()` with n_repeats=10
+
+**Key Findings**:
+- **Top 3 Features** (by permutation importance):
+  1. **`s1`** (blood serum): 0.609 ± 0.078 — Most critical feature
+  2. **`s5`** (blood serum): 0.464 ± 0.095 — Highly important
+  3. **`s2`** (blood serum): 0.227 ± 0.061 — Moderately important
+- **Manual Verification**: Permuting `s1` caused:
+  - R² to drop from 0.45 to **-0.05** (model worse than baseline!)
+  - RMSE to nearly double (demonstrating critical importance)
+- **Clinical Insight**: Blood serum measurements are key biomarkers for diabetes progression
+- **Negative Importance**: `age` showed slight negative importance (-0.005), likely due to random variation
+
+**Artifacts**:
+- Permutation importance visualization: `images/01_permutation_importance.png`
+- Feature importance rankings with error bars showing stability
+
+---
+
+### Progress Summary
+
+**Completed**: 2 of 7 notebooks (28.6%)
+
+- ✅ **Notebook 00**: Invariance and Baselines — Foundation established
+- ✅ **Notebook 01**: Permutation Importance — Feature ranking mastered
+- ⏳ **Notebook 02**: Regularization (Ridge & Lasso) — Next up
+- ⏳ **Notebook 03**: Multicollinearity & PCA
+- ⏳ **Notebook 04**: SHAP Values
+- ⏳ **Notebook 05**: Cross-Validation & Leakage
+- ⏳ **Notebook 06**: Summary & Reflection
+
 ### Expected Outcomes
 
 After completing this dojo, you will:
 
 - ✅ Understand when and why to use permutation importance
-- ✅ Know when Ridge vs Lasso is appropriate
-- ✅ Diagnose multicollinearity and interpret PCA results
-- ✅ Generate SHAP explanations for linear and tree models
-- ✅ Avoid data leakage through proper cross-validation
-- ✅ Have a toolkit of interpretability techniques for production
+- ⏳ Know when Ridge vs Lasso is appropriate
+- ⏳ Diagnose multicollinearity and interpret PCA results
+- ⏳ Generate SHAP explanations for linear and tree models
+- ⏳ Avoid data leakage through proper cross-validation
+- ⏳ Have a toolkit of interpretability techniques for production
 
 ---
 

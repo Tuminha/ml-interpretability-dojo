@@ -7,6 +7,22 @@ plots that are automatically saved to the images/ folder.
 
 import matplotlib.pyplot as plt
 import os
+from pathlib import Path
+
+
+def get_images_dir():
+    """
+    Get the absolute path to the images directory.
+    
+    Returns
+    -------
+    Path
+        Path object pointing to the images/ directory in the project root
+    """
+    # Get the project root (parent of src/)
+    project_root = Path(__file__).parent.parent
+    images_dir = project_root / "images"
+    return images_dir
 
 
 def barh(values, labels, title, save_path=None, figsize=(8, 6)):
@@ -72,8 +88,31 @@ def barh(values, labels, title, save_path=None, figsize=(8, 6)):
     #   os.makedirs('images', exist_ok=True)  # Create folder if needed
     #   save_path = save_path or f"images/{title.lower().replace(' ', '_')}.png"
     #   plt.savefig(save_path, dpi=150, bbox_inches='tight')
+
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.barh(labels, values)
+    ax.invert_yaxis()
+    ax.set_title(title)
+    ax.set_xlabel('Value')
+    ax.set_ylabel('Feature')
+    plt.tight_layout()
     
-    raise NotImplementedError("Implement barh()")
+    # Get images directory and create if needed
+    images_dir = get_images_dir()
+    images_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Generate save path if not provided
+    if save_path is None:
+        filename = title.lower().replace(' ', '_').replace('/', '_') + '.png'
+        save_path = images_dir / filename
+    else:
+        # If relative path provided, make it relative to images dir
+        if not os.path.isabs(save_path):
+            save_path = images_dir / save_path
+    
+    plt.savefig(str(save_path), dpi=150, bbox_inches='tight')
+    print(f"✓ Figure saved to: {save_path}")
+    return fig
 
 
 def save_figure(fig, filename, dpi=150):
@@ -98,6 +137,13 @@ def save_figure(fig, filename, dpi=150):
     # Create images/ directory if needed
     # Save figure with high DPI
     # Hints: os.makedirs('images', exist_ok=True); fig.savefig(...)
-    
-    raise NotImplementedError("Optional: implement save_figure()")
 
+    # Get images directory and create if needed
+    images_dir = get_images_dir()
+    images_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Build full path
+    save_path = images_dir / filename
+    fig.savefig(str(save_path), dpi=dpi, bbox_inches='tight')
+    print(f"✓ Figure saved to: {save_path}")
+    return fig
