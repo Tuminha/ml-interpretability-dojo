@@ -101,7 +101,7 @@ Each notebook is designed as a learning journey: 70% explanation, 30% guided imp
 
 </div>
 
-### Notebook 02: Regularization (Ridge & Lasso)
+### Notebook 02: Regularization (Ridge & Lasso) ✅
 **The Art of Restraint** — Overfitting is the enemy of generalization. Regularization tames it by penalizing complexity. Ridge shrinks coefficients smoothly. Lasso can zero them out entirely, performing automatic feature selection. Understanding when to use each is a superpower.
 
 **Key Concepts:**
@@ -109,6 +109,24 @@ Each notebook is designed as a learning journey: 70% explanation, 30% guided imp
 - L1 (Lasso) vs L2 (Ridge) penalties
 - Coefficient shrinkage vs selection
 - Cross-validation for hyperparameter tuning
+
+**Results:**
+- **Ridge Regression**: Best α = 1.23, R² = 0.4544, RMSE = 53.77
+  - All 10 features retained (no feature selection)
+  - Top features: `s5` (30.74), `bmi` (25.75), `bp` (16.72)
+- **Lasso Regression**: Best α = 1.56, R² = 0.4713, RMSE = 52.93
+  - **Automatic feature selection**: 3 features set to zero (`age`, `s2`, `s4`)
+  - Top features: `bmi` (26.20), `s5` (22.09), `bp` (15.13)
+- **Key Finding**: Lasso performs slightly better (R²: 0.471 vs 0.454) while using only 7 features instead of 10
+- **Insight**: Lasso's feature selection identifies that `age`, `s2`, and `s4` are redundant for this model
+
+<div align="center">
+
+<img src="images/02_ridge_lasso_coefficients.png" alt="Ridge vs Lasso Coefficients" width="680" />
+
+*Side-by-side comparison showing Lasso's sparsity (zero coefficients) vs Ridge's smooth shrinkage*
+
+</div>
 
 ### Notebook 03: Multicollinearity & PCA
 **The Redundancy Problem** — When features are highly correlated, coefficients become unstable and hard to interpret. Variance Inflation Factor (VIF) diagnoses the problem. Principal Component Analysis (PCA) reveals the underlying structure, rotating data to uncorrelated axes.
@@ -231,10 +249,15 @@ ml-interpretability-dojo/
 │   └── smoke_test_plan.md   # Acceptance criteria
 ├── images/                  # Saved plots and visualizations
 │   ├── 00_model_performance_context.png
-│   └── 01_permutation_importance.png
+│   ├── 01_permutation_importance.png
+│   ├── 02_ridge_coefficients.png
+│   ├── 02_lasso_coefficients.png
+│   └── 02_ridge_lasso_coefficients.png
 └── data/
     └── results/             # Saved model scores and metrics
-        └── Baseline_linear_regression_scores.json
+        ├── Baseline_linear_regression_scores.json
+        ├── ridge_coefficients.json
+        └── lasso_coefficients.json
 ```
 
 ---
@@ -298,14 +321,42 @@ The goal isn't to copy-paste code—it's to build **durable intuition** that you
 
 ---
 
+#### ✅ Notebook 02: Regularization (Ridge & Lasso)
+**Status**: Completed
+
+**Models**: RidgeCV and LassoCV with StandardScaler
+- **Cross-Validation**: Automatic alpha selection via CV
+- **Ridge**: α = 1.23 (from logspace -3 to 3)
+- **Lasso**: α = 1.56 (from logspace -3 to 1)
+
+**Key Findings**:
+- **Performance Comparison**:
+  - **Ridge**: R² = 0.4544, RMSE = 53.77
+  - **Lasso**: R² = 0.4713, RMSE = 52.93 (slightly better!)
+- **Feature Selection**:
+  - **Ridge**: All 10 features retained (smooth shrinkage, no zeros)
+  - **Lasso**: 7 features selected, 3 set to zero (`age`, `s2`, `s4`)
+- **Coefficient Patterns**:
+  - **Ridge top features**: `s5` (30.74), `bmi` (25.75), `bp` (16.72)
+  - **Lasso top features**: `bmi` (26.20), `s5` (22.09), `bp` (15.13)
+- **Key Insight**: Lasso achieves better performance with fewer features, demonstrating automatic feature selection works effectively
+
+**Artifacts**:
+- Ridge coefficients visualization: `images/02_ridge_coefficients.png`
+- Lasso coefficients visualization: `images/02_lasso_coefficients.png`
+- Side-by-side comparison: `images/02_ridge_lasso_coefficients.png`
+- Results saved: `data/results/ridge_coefficients.json`, `data/results/lasso_coefficients.json`
+
+---
+
 ### Progress Summary
 
-**Completed**: 2 of 7 notebooks (28.6%)
+**Completed**: 3 of 7 notebooks (42.9%)
 
 - ✅ **Notebook 00**: Invariance and Baselines — Foundation established
 - ✅ **Notebook 01**: Permutation Importance — Feature ranking mastered
-- ⏳ **Notebook 02**: Regularization (Ridge & Lasso) — Next up
-- ⏳ **Notebook 03**: Multicollinearity & PCA
+- ✅ **Notebook 02**: Regularization (Ridge & Lasso) — Feature selection learned
+- ⏳ **Notebook 03**: Multicollinearity & PCA — Next up
 - ⏳ **Notebook 04**: SHAP Values
 - ⏳ **Notebook 05**: Cross-Validation & Leakage
 - ⏳ **Notebook 06**: Summary & Reflection
@@ -315,7 +366,7 @@ The goal isn't to copy-paste code—it's to build **durable intuition** that you
 After completing this dojo, you will:
 
 - ✅ Understand when and why to use permutation importance
-- ⏳ Know when Ridge vs Lasso is appropriate
+- ✅ Know when Ridge vs Lasso is appropriate
 - ⏳ Diagnose multicollinearity and interpret PCA results
 - ⏳ Generate SHAP explanations for linear and tree models
 - ⏳ Avoid data leakage through proper cross-validation
