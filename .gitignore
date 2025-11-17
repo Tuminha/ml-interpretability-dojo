@@ -1,0 +1,15 @@
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+.venv/
+venv/
+env/
+.env
+data/processed/*
+reports/
+*.pkl
+*.joblib
+*.h5
+*.hdf5
+.DS_Store
+
