@@ -128,7 +128,7 @@ Each notebook is designed as a learning journey: 70% explanation, 30% guided imp
 
 </div>
 
-### Notebook 03: Multicollinearity & PCA
+### Notebook 03: Multicollinearity & PCA ✅
 **The Redundancy Problem** — When features are highly correlated, coefficients become unstable and hard to interpret. Variance Inflation Factor (VIF) diagnoses the problem. Principal Component Analysis (PCA) reveals the underlying structure, rotating data to uncorrelated axes.
 
 **Key Concepts:**
@@ -136,6 +136,25 @@ Each notebook is designed as a learning journey: 70% explanation, 30% guided imp
 - PCA as a diagnostic tool
 - Explained variance and component loadings
 - When to use PCA vs feature engineering
+
+**Results:**
+- **VIF Analysis**: Found 4 features with high multicollinearity (`s1`, `s2`, `s3`, `s5` with VIF > 10)
+- **PCA Dimensionality Reduction**: 7 principal components explain 90% of variance
+  - Reduced from 10 features to 7 components
+  - Each component is a linear combination of ALL 10 original features
+- **Model Comparison** (Ridge Regression):
+  - **PCA (7 components)**: RMSE = 53.64, R² = 0.457, MAE = 42.90
+  - **Original (10 features)**: RMSE = 53.77, R² = 0.454, MAE = 42.81
+  - **Key Finding**: Nearly identical performance! PCA successfully reduced dimensionality without losing predictive power
+- **Insight**: For small datasets (10 features), PCA benefits are minimal, but validates that 7 components capture 90% of information
+
+<div align="center">
+
+<img src="images/03_pca_ridge_results.png" alt="PCA vs Original Features Comparison" width="680" />
+
+*Side-by-side comparison showing PCA maintains performance with fewer dimensions*
+
+</div>
 
 ### Notebook 04: SHAP Values
 **The Attribution Game** — SHAP (SHapley Additive exPlanations) answers: "How much did each feature contribute to this specific prediction?" It's based on game theory, ensuring local attributions sum to the prediction minus baseline. Different explainers for different models, each with tradeoffs.
@@ -252,7 +271,11 @@ ml-interpretability-dojo/
 │   ├── 01_permutation_importance.png
 │   ├── 02_ridge_coefficients.png
 │   ├── 02_lasso_coefficients.png
-│   └── 02_ridge_lasso_coefficients.png
+│   ├── 02_ridge_lasso_coefficients.png
+│   ├── 03_pca_scree_plot.png
+│   ├── 03_pca_cumulative_variance_plot.png
+│   ├── 03_pca_loadings_heatmap.png
+│   └── 03_pca_ridge_results.png
 └── data/
     └── results/             # Saved model scores and metrics
         ├── Baseline_linear_regression_scores.json
@@ -349,15 +372,45 @@ The goal isn't to copy-paste code—it's to build **durable intuition** that you
 
 ---
 
+#### ✅ Notebook 03: Multicollinearity & PCA
+**Status**: Completed
+
+**Analysis Methods**: VIF (Variance Inflation Factor) and PCA (Principal Component Analysis)
+
+**Key Findings**:
+- **VIF Analysis**:
+  - **High VIF (>10)**: `s1`, `s2`, `s3`, `s5` — indicating multicollinearity
+  - **Normal VIF (5-10)**: `s4`
+  - **Low VIF (<5)**: `age`, `sex`, `bmi`, `bp`, `s6`
+- **PCA Dimensionality Reduction**:
+  - **7 principal components** explain 90% of variance
+  - Each component is a linear combination of ALL 10 original features
+  - PC1 explains ~40% variance (most important)
+  - PC2 explains ~15%, PC3 explains ~12.5%
+- **Model Performance Comparison** (Ridge Regression):
+  - **PCA (7 components)**: RMSE = 53.64, R² = 0.457, MAE = 42.90
+  - **Original (10 features)**: RMSE = 53.77, R² = 0.454, MAE = 42.81
+  - **Result**: Nearly identical performance (differences < 0.5%)
+- **Key Insight**: PCA successfully reduced dimensionality from 10 features to 7 components with no meaningful performance loss, validating that 90% variance capture is sufficient for prediction
+
+**Artifacts**:
+- VIF analysis results
+- PCA scree plot: `images/03_pca_scree_plot.png`
+- Cumulative variance plot: `images/03_pca_cumulative_variance_plot.png`
+- Component loadings heatmap: `images/03_pca_loadings_heatmap.png`
+- PCA vs Original comparison: `images/03_pca_ridge_results.png`
+
+---
+
 ### Progress Summary
 
-**Completed**: 3 of 7 notebooks (42.9%)
+**Completed**: 4 of 7 notebooks (57.1%)
 
 - ✅ **Notebook 00**: Invariance and Baselines — Foundation established
 - ✅ **Notebook 01**: Permutation Importance — Feature ranking mastered
 - ✅ **Notebook 02**: Regularization (Ridge & Lasso) — Feature selection learned
-- ⏳ **Notebook 03**: Multicollinearity & PCA — Next up
-- ⏳ **Notebook 04**: SHAP Values
+- ✅ **Notebook 03**: Multicollinearity & PCA — Dimensionality reduction validated
+- ⏳ **Notebook 04**: SHAP Values — Next up
 - ⏳ **Notebook 05**: Cross-Validation & Leakage
 - ⏳ **Notebook 06**: Summary & Reflection
 
@@ -367,7 +420,7 @@ After completing this dojo, you will:
 
 - ✅ Understand when and why to use permutation importance
 - ✅ Know when Ridge vs Lasso is appropriate
-- ⏳ Diagnose multicollinearity and interpret PCA results
+- ✅ Diagnose multicollinearity and interpret PCA results
 - ⏳ Generate SHAP explanations for linear and tree models
 - ⏳ Avoid data leakage through proper cross-validation
 - ⏳ Have a toolkit of interpretability techniques for production
