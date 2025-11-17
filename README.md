@@ -53,13 +53,28 @@ Each notebook is designed as a learning journey: 70% explanation, 30% guided imp
 
 ## 📚 The Path
 
-### Notebook 00: Invariance and Baselines
+### Notebook 00: Invariance and Baselines ✅
 **The Foundation** — Before we interpret complex models, we must understand what makes a model "well-behaved." Invariance teaches us that row order shouldn't matter. Baselines teach us what "random" looks like. Together, they form the bedrock of model evaluation.
 
 **Key Concepts:**
 - Row-order invariance in tabular models
 - Mean predictor and majority class baselines
 - Reproducibility through random seeds
+
+**Results:**
+- Baseline Linear Regression on Diabetes Dataset:
+  - **RMSE**: 53.85 (average prediction error in disease progression units)
+  - **R²**: 0.4526 (explains 45.26% of variance)
+  - Model demonstrates row-order invariance ✓
+  - Performance beats naive baseline (mean predictor) ✓
+
+<div align="center">
+
+<img src="images/00_model_performance_context.png" alt="Model Performance Context" width="680" />
+
+*Distribution of target values and predictions vs actual scatter plot*
+
+</div>
 
 ### Notebook 01: Permutation Importance
 **Breaking the Connection** — What happens when we randomly shuffle a feature? If the model's performance barely changes, that feature carries little signal. Permutation importance quantifies this intuition, giving us a model-agnostic way to rank features by their predictive power.
@@ -197,7 +212,11 @@ ml-interpretability-dojo/
 │   └── utils.py             # Utility functions (seeds, etc.)
 ├── tests/
 │   └── smoke_test_plan.md   # Acceptance criteria
-└── images/                  # Saved plots and visualizations
+├── images/                  # Saved plots and visualizations
+│   └── 00_model_performance_context.png
+└── data/
+    └── results/             # Saved model scores and metrics
+        └── Baseline_linear_regression_scores.json
 ```
 
 ---
@@ -215,7 +234,29 @@ The goal isn't to copy-paste code—it's to build **durable intuition** that you
 
 ---
 
-## 📈 Expected Outcomes
+## 📈 Progress & Results
+
+### Completed Notebooks
+
+#### ✅ Notebook 00: Invariance and Baselines
+**Status**: Completed
+
+**Baseline Model Performance** (Diabetes Dataset):
+- **Model**: Linear Regression
+- **RMSE**: 53.85
+- **R²**: 0.4526 (45.26% variance explained)
+- **Key Findings**:
+  - Model demonstrates row-order invariance (predictions unchanged when rows shuffled)
+  - Significantly outperforms naive baseline (mean predictor)
+  - Moderate performance typical for healthcare datasets due to biological complexity
+
+**Artifacts**:
+- Baseline scores saved to `data/results/Baseline_linear_regression_scores.json`
+- Performance visualization: `images/00_model_performance_context.png`
+
+---
+
+### Expected Outcomes
 
 After completing this dojo, you will:
 

@@ -60,7 +60,13 @@ def set_seed(seed=42):
     #   np.random.seed(seed)
     #   Optional: os.environ['PYTHONHASHSEED'] = str(seed)
     
-    raise NotImplementedError("Implement set_seed()")
+    import random
+    import numpy as np
+    import os
+    random.seed(seed)
+    np.random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    
 
 
 def get_random_state(seed=42):
@@ -89,6 +95,9 @@ def get_random_state(seed=42):
     # === TODO (optional) ===
     # Return np.random.RandomState(seed)
     # Useful for advanced use cases
-    
+    import numpy as np
+    np.random.seed(seed)
+    return np.random.default_rng(seed)
+
     raise NotImplementedError("Optional: implement get_random_state()")
 
