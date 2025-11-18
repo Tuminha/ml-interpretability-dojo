@@ -168,24 +168,34 @@ Each notebook is designed as a learning journey: 70% explanation, 30% guided imp
 
 **Results:**
 - **Linear Model (Ridge)**: SHAP values computed using LinearExplainer
-- **Model**: Ridge regression (α = 0.1) with StandardScaler
-- **Background Sample**: 353 rows (all available training data)
-- **Top 5 Features by Mean Absolute SHAP Value**:
-  1. **`s1`**: 33.17 (most impactful feature)
-  2. **`s5`**: 28.79 (second most important)
-  3. **`bmi`**: 22.83 (third most important)
-  4. **`s2`**: 18.96 (fourth)
-  5. **`bp`**: 13.53 (fifth)
+  - **Model**: Ridge regression (α = 0.1) with StandardScaler
+  - **Background Sample**: 353 rows (all available training data)
+  - **Top 5 Features by Mean Absolute SHAP Value**:
+    1. **`s1`**: 33.17 (most impactful feature)
+    2. **`s5`**: 28.79 (second most important)
+    3. **`bmi`**: 22.83 (third most important)
+    4. **`s2`**: 18.96 (fourth)
+    5. **`bp`**: 13.53 (fifth)
+- **Tree Model (XGBoost)**: SHAP values computed using TreeExplainer
+  - **Model**: XGBRegressor (n_estimators=200, max_depth=3)
+  - **Top 3 Features**: `bmi`, `s5`, `s3` (tree models capture non-linear interactions)
+- **SHAP vs Permutation Importance Comparison**:
+  - **Strong Agreement**: 4 out of 5 top features overlap (`s1`, `s5`, `bmi`, `s2`)
+  - **Differences**: SHAP ranks `bp` #5, Permutation ranks `sex` #5
+  - **Key Insight**: SHAP captures local (per-prediction) contributions, while permutation importance measures global (overall model) impact
 - **Directionality Insights**:
   - **Positive impact**: `s1`, `s5`, `bmi`, `bp` — high values increase predictions
   - **Negative impact**: `s2`, `s4` — high values decrease predictions (inverse relationship)
-- **Key Finding**: SHAP values align with permutation importance rankings, confirming `s1` and `s5` as the most critical features for diabetes progression prediction
 
 <div align="center">
 
 <img src="images/04_shap_linear_summary.png" alt="SHAP Summary Plot for Linear Model" width="680" />
 
-*SHAP summary plot showing feature importance and directionality for Ridge regression model*
+*SHAP summary plot for Ridge regression model showing feature importance and directionality*
+
+<img src="images/04_shap_tree_summary.png" alt="SHAP Summary Plot for Tree Model" width="680" />
+
+*SHAP summary plot for XGBoost model showing non-linear feature interactions*
 
 </div>
 
@@ -299,7 +309,8 @@ ml-interpretability-dojo/
 │   ├── 03_pca_cumulative_variance_plot.png
 │   ├── 03_pca_loadings_heatmap.png
 │   ├── 03_pca_ridge_results.png
-│   └── 04_shap_linear_summary.png
+│   ├── 04_shap_linear_summary.png
+│   └── 04_shap_tree_summary.png
 └── data/
     └── results/             # Saved model scores and metrics
         ├── Baseline_linear_regression_scores.json
@@ -426,47 +437,56 @@ The goal isn't to copy-paste code—it's to build **durable intuition** that you
 
 ---
 
-#### ✅ Notebook 04: SHAP Values (Linear Model)
-**Status**: Partially Completed (Linear Model Done)
+#### ✅ Notebook 04: SHAP Values
+**Status**: Completed
 
-**Model**: Ridge Regression (α = 0.1) with StandardScaler
+**Linear Model (Ridge)**:
+- **Model**: Ridge Regression (α = 0.1) with StandardScaler
 - **Explainer**: LinearExplainer (fast, exact for linear models)
 - **Background Sample**: 353 rows (all available training data)
 - **Test Sample**: 89 rows
 
+**Tree Model (XGBoost)**:
+- **Model**: XGBRegressor (n_estimators=200, max_depth=3, random_state=42)
+- **Explainer**: TreeExplainer (fast, exact for tree models)
+- **Test Sample**: 89 rows
+
 **Key Findings:**
-- **Feature Importance Ranking** (by mean absolute SHAP value):
+- **Linear Model Feature Importance** (by mean absolute SHAP value):
   1. **`s1`**: 33.17 — Most impactful feature
   2. **`s5`**: 28.79 — Second most important
   3. **`bmi`**: 22.83 — Third most important
   4. **`s2`**: 18.96 — Fourth
   5. **`bp`**: 13.53 — Fifth
-  6. **`sex`**: 11.56 — Sixth
-  7. **`s4`**: 9.91 — Seventh
-  8. **`s3`**: 6.15 — Eighth
-  9. **`age`**: 1.67 — Ninth
-  10. **`s6`**: 1.72 — Least important
+- **Tree Model Top Features**: `bmi`, `s5`, `s3` (captures non-linear interactions differently than linear model)
+- **SHAP vs Permutation Importance Comparison**:
+  - **Strong Agreement**: 4 out of 5 top features overlap (`s1`, `s5`, `bmi`, `s2`)
+  - **Differences**: 
+    - SHAP ranks `bp` #5 (local impact for specific predictions)
+    - Permutation ranks `sex` #5 (global impact on overall model performance)
+  - **Interpretation**: SHAP captures per-prediction contributions, while permutation importance measures overall model impact
 - **Directionality Analysis**:
   - **Positive Impact Features**: `s1`, `s5`, `bmi`, `bp` — high values increase predictions
   - **Negative Impact Features**: `s2`, `s4` — high values decrease predictions (inverse relationship)
-- **Consistency Check**: SHAP rankings align with permutation importance results (Notebook 01), confirming `s1` and `s5` as the most critical biomarkers
-- **Key Insight**: SHAP provides both magnitude (how much) and direction (positive/negative) of feature contributions, offering richer interpretability than permutation importance alone
+- **Key Insight**: SHAP provides both magnitude (how much) and direction (positive/negative) of feature contributions, offering richer interpretability than permutation importance alone. Tree models reveal different feature interactions than linear models.
 
 **Artifacts**:
-- SHAP summary plot: `images/04_shap_linear_summary.png`
+- SHAP summary plot (linear): `images/04_shap_linear_summary.png`
+- SHAP summary plot (tree): `images/04_shap_tree_summary.png`
 - Feature importance rankings with directionality
+- Comparison table: SHAP vs Permutation Importance
 
 ---
 
 ### Progress Summary
 
-**Completed**: 4.5 of 7 notebooks (64.3%)
+**Completed**: 5 of 7 notebooks (71.4%)
 
 - ✅ **Notebook 00**: Invariance and Baselines — Foundation established
 - ✅ **Notebook 01**: Permutation Importance — Feature ranking mastered
 - ✅ **Notebook 02**: Regularization (Ridge & Lasso) — Feature selection learned
 - ✅ **Notebook 03**: Multicollinearity & PCA — Dimensionality reduction validated
-- 🔄 **Notebook 04**: SHAP Values — Linear model completed, tree model pending
+- ✅ **Notebook 04**: SHAP Values — Linear and tree models completed
 - ⏳ **Notebook 05**: Cross-Validation & Leakage
 - ⏳ **Notebook 06**: Summary & Reflection
 
@@ -477,7 +497,7 @@ After completing this dojo, you will:
 - ✅ Understand when and why to use permutation importance
 - ✅ Know when Ridge vs Lasso is appropriate
 - ✅ Diagnose multicollinearity and interpret PCA results
-- 🔄 Generate SHAP explanations for linear models (✅) and tree models (⏳)
+- ✅ Generate SHAP explanations for linear and tree models
 - ⏳ Avoid data leakage through proper cross-validation
 - ⏳ Have a toolkit of interpretability techniques for production
 
