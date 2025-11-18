@@ -187,15 +187,55 @@ Each notebook is designed as a learning journey: 70% explanation, 30% guided imp
   - **Positive impact**: `s1`, `s5`, `bmi`, `bp` — high values increase predictions
   - **Negative impact**: `s2`, `s4` — high values decrease predictions (inverse relationship)
 
+### Interpreting the SHAP Plots
+
+**How to Read SHAP Summary Plots:**
+
+1. **Y-axis (Features)**: Features ordered by importance (mean absolute SHAP value)
+   - Top features have the largest impact on predictions
+   - `s1` is most important, `age` is least important
+
+2. **X-axis (SHAP Value)**: Impact on model output
+   - **Positive values** (right of 0): Feature pushes prediction **higher**
+   - **Negative values** (left of 0): Feature pushes prediction **lower**
+   - **Zero**: No impact for that instance
+
+3. **Color (Feature Value)**: Actual feature value for each instance
+   - **Red dots**: High feature values
+   - **Blue dots**: Low feature values
+   - **Pattern**: Red dots on the right = high values increase predictions
+
+4. **Each Dot**: Represents one prediction instance
+   - Spread shows how impact varies across instances
+   - Clustering around zero = low importance
+
+**Key Observations from the Plots:**
+
+**Linear Model (Ridge) Plot:**
+- `s1` shows the widest spread (most impactful) with clear positive correlation (red → right)
+- `s5` and `bmi` also show strong positive impact
+- `s2` and `s4` show inverse relationships (red → left, blue → right)
+- `age` and `s6` cluster tightly around zero (minimal impact)
+
+**Tree Model (XGBoost) Plot:**
+- `bmi` is the top feature (tree models capture non-linear BMI effects)
+- Different ranking than linear model (tree models find different patterns)
+- Shows more complex interactions between features
+- `s3` has stronger negative impact in tree model (non-linear relationship)
+
+**Why Linear vs Tree Models Differ:**
+- **Linear models**: Assume additive relationships (feature effects are independent)
+- **Tree models**: Capture interactions and non-linear patterns (e.g., BMI might interact with other features differently)
+
 <div align="center">
 
 <img src="images/04_shap_linear_summary.png" alt="SHAP Summary Plot for Linear Model" width="680" />
 
-*SHAP summary plot for Ridge regression model showing feature importance and directionality*
+*SHAP summary plot for Ridge regression model. Features ordered by importance (top = most important). Each dot is one prediction. Red = high feature value, Blue = low feature value. Position shows impact: right = increases prediction, left = decreases prediction.*
 
 <img src="images/04_shap_tree_summary.png" alt="SHAP Summary Plot for Tree Model" width="680" />
 
-*SHAP summary plot for XGBoost model showing non-linear feature interactions*
+*SHAP summary plot for XGBoost model. Tree models reveal different feature rankings than linear models due to non-linear interactions. BMI becomes the top feature, showing how tree models capture complex relationships.*
 
 </div>
 
@@ -470,11 +510,34 @@ The goal isn't to copy-paste code—it's to build **durable intuition** that you
   - **Negative Impact Features**: `s2`, `s4` — high values decrease predictions (inverse relationship)
 - **Key Insight**: SHAP provides both magnitude (how much) and direction (positive/negative) of feature contributions, offering richer interpretability than permutation importance alone. Tree models reveal different feature interactions than linear models.
 
+**Plot Interpretations:**
+
+**Linear Model SHAP Plot (`04_shap_linear_summary.png`):**
+- **Feature Ranking**: `s1` (33.17) > `s5` (28.79) > `bmi` (22.83) > `s2` (18.96) > `bp` (13.53)
+- **Visual Pattern**: `s1` shows widest horizontal spread (most variable impact across instances)
+- **Directionality**: Red dots (high values) on right = positive correlation; red dots on left = negative correlation
+- **Key Finding**: `s2` and `s4` show inverse relationships (high values decrease predictions)
+
+**Tree Model SHAP Plot (`04_shap_tree_summary.png`):**
+- **Feature Ranking**: `bmi` > `s5` > `s3` (different from linear model!)
+- **Visual Pattern**: `bmi` is top feature (tree models capture non-linear BMI effects)
+- **Key Finding**: Tree models reveal `bmi` as most important, showing how non-linear models find different patterns than linear models
+- **Comparison**: Tree model shows `s3` has stronger negative impact than in linear model
+
+**SHAP vs Permutation Importance Comparison:**
+- **Agreement (4/5 features)**: Both methods identify `s1`, `s5`, `bmi`, `s2` as critical
+- **Disagreement**: SHAP prefers `bp` (#5), Permutation prefers `sex` (#5)
+- **Why Different**: 
+  - SHAP measures **local impact** (per-prediction contributions)
+  - Permutation measures **global impact** (overall model performance change)
+  - `bp` may have high local impact for specific instances but less overall impact
+  - `sex` may have consistent moderate impact across all predictions
+
 **Artifacts**:
-- SHAP summary plot (linear): `images/04_shap_linear_summary.png`
-- SHAP summary plot (tree): `images/04_shap_tree_summary.png`
-- Feature importance rankings with directionality
-- Comparison table: SHAP vs Permutation Importance
+- SHAP summary plot (linear): `images/04_shap_linear_summary.png` — Shows feature importance and directionality for Ridge regression
+- SHAP summary plot (tree): `images/04_shap_tree_summary.png` — Shows non-linear feature interactions in XGBoost
+- Feature importance rankings with directionality (positive/negative impact)
+- Comparison table: SHAP vs Permutation Importance (4/5 features agree)
 
 ---
 
