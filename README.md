@@ -239,13 +239,35 @@ Each notebook is designed as a learning journey: 70% explanation, 30% guided imp
 
 </div>
 
-### Notebook 05: Cross-Validation & Leakage
+### Notebook 05: Cross-Validation & Leakage ✅
 **The Validation Trap** — Data leakage is the silent killer of model insights. When training and test sets share information they shouldn't, metrics become misleading. GroupKFold and TimeSeriesSplit prevent this, ensuring our interpretations reflect reality.
 
 **Key Concepts:**
 - KFold vs GroupKFold vs TimeSeriesSplit
 - Temporal and group-based leakage
 - Conservative vs optimistic estimates
+
+**Results:**
+- **KFold vs GroupKFold**: Demonstrated group leakage in KFold (same groups in train and test)
+- **GroupKFold**: Prevents leakage by keeping all measurements from the same group together
+- **TimeSeriesSplit**: 
+  - **Expanding Window Pattern**: Training set grows with each fold (20 → 35 → 52 → 68 → 83 samples)
+  - **Future Test Sets**: Test sets are always chronologically after training (no temporal leakage)
+  - **CV Metrics**: Mean RMSE = 11.63 ± 5.30, Mean R² = -0.62 ± 1.56
+  - **Key Insight**: Test set is always in the future relative to training, simulating real-world deployment
+
+**Key Takeaway**: 
+- **KFold**: Wrong for grouped/temporal data (causes leakage)
+- **GroupKFold**: Use when you have repeated measurements per entity (patients, players)
+- **TimeSeriesSplit**: Use for time series data - ensures you use only past data to predict future
+
+<div align="center">
+
+<img src="images/05_timeseries_split.png" alt="TimeSeriesSplit Visualization" width="680" />
+
+*TimeSeriesSplit demonstrates the expanding window pattern: training set grows with each fold, and test sets are always in the future (no temporal leakage)*
+
+</div>
 
 ### Notebook 06: Summary & Reflection
 **Synthesizing Knowledge** — A quiz notebook to reinforce concepts through written reflection. In your own words, explain what you've learned and when each technique applies.
@@ -350,7 +372,8 @@ ml-interpretability-dojo/
 │   ├── 03_pca_loadings_heatmap.png
 │   ├── 03_pca_ridge_results.png
 │   ├── 04_shap_linear_summary.png
-│   └── 04_shap_tree_summary.png
+│   ├── 04_shap_tree_summary.png
+│   └── 05_timeseries_split.png
 └── data/
     └── results/             # Saved model scores and metrics
         ├── Baseline_linear_regression_scores.json
@@ -541,16 +564,52 @@ The goal isn't to copy-paste code—it's to build **durable intuition** that you
 
 ---
 
+#### ✅ Notebook 05: Cross-Validation & Leakage
+**Status**: Completed
+
+**Analysis Methods**: KFold, GroupKFold, and TimeSeriesSplit cross-validation schemes
+
+**Key Findings:**
+- **KFold vs GroupKFold Comparison**:
+  - **KFold Problem**: Can split groups across train/test (data leakage)
+  - **Example**: Group A's measurement #1 in training, measurement #2 in test
+  - **GroupKFold Solution**: Keeps all measurements from the same group together
+  - **Result**: GroupKFold gives more conservative (realistic) performance estimates
+- **TimeSeriesSplit Analysis**:
+  - **Expanding Window Pattern**: Training set grows with each fold
+    - Fold 1: 20 training samples
+    - Fold 2: 35 training samples
+    - Fold 3: 52 training samples
+    - Fold 4: 68 training samples
+    - Fold 5: 83 training samples
+  - **Future Test Sets**: Test sets are always chronologically after training
+  - **CV Performance** (Ridge Regression):
+    - Mean RMSE: 11.63 ± 5.30
+    - Mean MAE: 9.62 ± 4.91
+    - Mean R²: -0.62 ± 1.56
+  - **Key Insight**: Test set is always in the future relative to training, ensuring no temporal leakage
+- **When to Use Each**:
+  - **KFold**: Independent samples, no groups, no time order
+  - **GroupKFold**: Repeated measurements per entity (patients, players, customers)
+  - **TimeSeriesSplit**: Time series data, temporal sequences
+
+**Artifacts**:
+- KFold vs GroupKFold comparison showing group leakage
+- TimeSeriesSplit visualization: `images/05_timeseries_split.png`
+- Fold-by-fold metrics and expanding window pattern demonstration
+
+---
+
 ### Progress Summary
 
-**Completed**: 5 of 7 notebooks (71.4%)
+**Completed**: 6 of 7 notebooks (85.7%)
 
 - ✅ **Notebook 00**: Invariance and Baselines — Foundation established
 - ✅ **Notebook 01**: Permutation Importance — Feature ranking mastered
 - ✅ **Notebook 02**: Regularization (Ridge & Lasso) — Feature selection learned
 - ✅ **Notebook 03**: Multicollinearity & PCA — Dimensionality reduction validated
 - ✅ **Notebook 04**: SHAP Values — Linear and tree models completed
-- ⏳ **Notebook 05**: Cross-Validation & Leakage
+- ✅ **Notebook 05**: Cross-Validation & Leakage — KFold, GroupKFold, TimeSeriesSplit mastered
 - ⏳ **Notebook 06**: Summary & Reflection
 
 ### Expected Outcomes
@@ -561,7 +620,7 @@ After completing this dojo, you will:
 - ✅ Know when Ridge vs Lasso is appropriate
 - ✅ Diagnose multicollinearity and interpret PCA results
 - ✅ Generate SHAP explanations for linear and tree models
-- ⏳ Avoid data leakage through proper cross-validation
+- ✅ Avoid data leakage through proper cross-validation (KFold, GroupKFold, TimeSeriesSplit)
 - ⏳ Have a toolkit of interpretability techniques for production
 
 ---
