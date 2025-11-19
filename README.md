@@ -269,8 +269,14 @@ Each notebook is designed as a learning journey: 70% explanation, 30% guided imp
 
 </div>
 
-### Notebook 06: Summary & Reflection
+### Notebook 06: Summary & Reflection ✅
 **Synthesizing Knowledge** — A quiz notebook to reinforce concepts through written reflection. In your own words, explain what you've learned and when each technique applies.
+
+**Results:**
+- Completed reflection questions on permutation importance, Ridge vs Lasso, PCA redundancy, and SHAP pitfalls
+- Synthesized knowledge from all previous notebooks
+- Identified key insights and limitations of each interpretability technique
+- Demonstrated understanding of when to use each method in practice
 
 ---
 
@@ -602,7 +608,7 @@ The goal isn't to copy-paste code—it's to build **durable intuition** that you
 
 ### Progress Summary
 
-**Completed**: 6 of 7 notebooks (85.7%)
+**Completed**: 7 of 7 notebooks (100%) 🎉
 
 - ✅ **Notebook 00**: Invariance and Baselines — Foundation established
 - ✅ **Notebook 01**: Permutation Importance — Feature ranking mastered
@@ -610,7 +616,7 @@ The goal isn't to copy-paste code—it's to build **durable intuition** that you
 - ✅ **Notebook 03**: Multicollinearity & PCA — Dimensionality reduction validated
 - ✅ **Notebook 04**: SHAP Values — Linear and tree models completed
 - ✅ **Notebook 05**: Cross-Validation & Leakage — KFold, GroupKFold, TimeSeriesSplit mastered
-- ⏳ **Notebook 06**: Summary & Reflection
+- ✅ **Notebook 06**: Summary & Reflection — Knowledge synthesized
 
 ### Expected Outcomes
 
@@ -621,7 +627,7 @@ After completing this dojo, you will:
 - ✅ Diagnose multicollinearity and interpret PCA results
 - ✅ Generate SHAP explanations for linear and tree models
 - ✅ Avoid data leakage through proper cross-validation (KFold, GroupKFold, TimeSeriesSplit)
-- ⏳ Have a toolkit of interpretability techniques for production
+- ✅ Have a toolkit of interpretability techniques for production
 
 ---
 
